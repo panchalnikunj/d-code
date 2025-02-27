@@ -1,6 +1,69 @@
 //% color=#000000 icon="\uf2db" block="Bit-Z"
 namespace dCode {
 
+    // CAR SECTION 🚗
+    //% group="Car"
+
+    //% blockId=car_move block="move car %direction at speed %speed"
+    //% speed.min=0 speed.max=100
+    //% direction.defl=CarDirection.Forward
+    export function moveCar(direction: CarDirection, speed: number): void {
+        if (direction == CarDirection.Forward) {
+            pins.analogWritePin(AnalogPin.P0, speed * 10);
+            pins.analogWritePin(AnalogPin.P1, speed * 10);
+        } else {
+            pins.analogWritePin(AnalogPin.P0, 0);
+            pins.analogWritePin(AnalogPin.P1, 0);
+        }
+    }
+
+    //% blockId=car_steer block="steer car %direction"
+    //% direction.defl=Steering.Left
+    export function steerCar(direction: Steering): void {
+        if (direction == Steering.Left) {
+            pins.digitalWritePin(DigitalPin.P2, 1);
+        } else {
+            pins.digitalWritePin(DigitalPin.P2, 0);
+        }
+    }
+
+    //% blockId=car_lights block="turn %state car lights"
+    //% state.defl=CarLightState.On
+    export function carLights(state: CarLightState): void {
+        pins.digitalWritePin(DigitalPin.P3, state == CarLightState.On ? 1 : 0);
+    }
+
+    // ENUMS
+    //% blockId=car_direction_enum block="%direction"
+    //% blockHidden=true
+    export enum CarDirection {
+        //% block="Forward"
+        Forward,
+        //% block="Stop"
+        Stop
+    }
+
+    //% blockId=steering_enum block="%direction"
+    //% blockHidden=true
+    export enum Steering {
+        //% block="Left"
+        Left,
+        //% block="Right"
+        Right
+    }
+
+    //% blockId=car_light_enum block="%state"
+    //% blockHidden=true
+    export enum CarLightState {
+        //% block="On"
+        On,
+        //% block="Off"
+        Off
+    }
+
+
+
+
     //% group="Actuators"
     //% blockId=servo_motor block="set servo %servo to %angle°"
     //% angle.min=0 angle.max=180
