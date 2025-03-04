@@ -10,7 +10,7 @@ namespace dCode {
 
 
     // CAR SECTION 🚗
-    //% group="Car"
+    //% group="Car Controls"
     //% blockId=car_move block="Car Move %direction with speed %speed"
     //% direction.shadow="dropdown" direction.defl="Forward"
     //% speed.min=0 speed.max=1023
@@ -44,41 +44,6 @@ namespace dCode {
             pins.analogWritePin(AnalogPin.P15, 0);
         }
     }
-
-    //% blockId=car_lights block="turn %state car lights"
-    //% state.defl=CarLightState.On
-    export function carLights(state: CarLightState): void {
-        pins.digitalWritePin(DigitalPin.P3, state == CarLightState.On ? 1 : 0);
-    }
-
-    // ENUMS
-    //% blockId=car_direction_enum block="%direction"
-    //% blockHidden=true
-    export enum CarDirection {
-        //% block="Forward"
-        Forward,
-        //% block="Stop"
-        Stop
-    }
-
-    //% blockId=steering_enum block="%direction"
-    //% blockHidden=true
-    export enum Steering {
-        //% block="Left"
-        Left,
-        //% block="Right"
-        Right
-    }
-
-    //% blockId=car_light_enum block="%state"
-    //% blockHidden=true
-    export enum CarLightState {
-        //% block="On"
-        On,
-        //% block="Off"
-        Off
-    }
-
 
 
 
