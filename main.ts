@@ -17,11 +17,11 @@ namespace dCode {
     //% direction.defl=CarDirection.Forward
     export function moveCar(direction: CarDirection, speed: number): void {
         if (direction == CarDirection.Forward) {
-            pins.analogWritePin(AnalogPin.P0, speed * 10);
-            pins.analogWritePin(AnalogPin.P1, speed * 10);
+            pins.analogWritePin(DigitalPin.P12, speed * 10);
+            pins.analogWritePin(DigitalPin.P13, speed * 0);
         } else {
-            pins.analogWritePin(AnalogPin.P0, 0);
-            pins.analogWritePin(AnalogPin.P1, 0);
+            pins.analogWritePin(DigitalPin.P12, 0);
+            pins.analogWritePin(DigitalPin.P13, 0);
         }
     }
 
