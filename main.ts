@@ -200,6 +200,23 @@ namespace dCode {
     }
 
 
+    //% group="LCD Display"
+    //% blockId=lcd_initialize block="initialize LCD display at address %addr"
+    //% addr.defl=39
+    export function initializeLCD(addr: number): void {
+        basic.pause(50);
+        let i2cAddr = addr;
+
+        // Send initialization sequence
+        pins.i2cWriteNumber(i2cAddr, 0x33, NumberFormat.UInt8LE, false);
+        pins.i2cWriteNumber(i2cAddr, 0x32, NumberFormat.UInt8LE, false);
+        pins.i2cWriteNumber(i2cAddr, 0x28, NumberFormat.UInt8LE, false);
+        pins.i2cWriteNumber(i2cAddr, 0x0C, NumberFormat.UInt8LE, false);
+        pins.i2cWriteNumber(i2cAddr, 0x06, NumberFormat.UInt8LE, false);
+        pins.i2cWriteNumber(i2cAddr, 0x01, NumberFormat.UInt8LE, false);
+
+        basic.pause(5);
+    }
 
 
     //% group="LCD Display"
