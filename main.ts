@@ -19,9 +19,13 @@ namespace dCode {
         if (direction == CarDirection.Forward) {
             pins.analogWritePin(DigitalPin.P12, speed * 10);
             pins.analogWritePin(DigitalPin.P13, speed * 0);
+            pins.analogWritePin(DigitalPin.P14, speed * 10);
+            pins.analogWritePin(DigitalPin.P15, speed * 0);
         } else {
             pins.analogWritePin(DigitalPin.P12, 0);
             pins.analogWritePin(DigitalPin.P13, 0);
+            pins.analogWritePin(DigitalPin.P14, 0);
+            pins.analogWritePin(DigitalPin.P15, 0);
         }
     }
 
