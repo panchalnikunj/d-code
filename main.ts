@@ -2,7 +2,7 @@
 namespace dCode {
 
 
-    let LCD_I2C_ADDR = 0x27; // Default LCD I2C Address (Use 0x3F if needed)
+    let LCD_I2C_ADDR = 0x3F; // Default LCD I2C Address (Use 0x3F if needed)
 
     // Send command to LCD
     function lcdCommand(cmd: number) {
