@@ -177,122 +177,50 @@ namespace dCode {
 
 
 
+
     //% group="LCD Display"
-    /**
-     * Displays text on an I2C 16x2 LCD display at a specified column and row.
-     * @param text The text to display
-     * @param col The column number (0-15)
-     * @param row The row number (0 or 1)
-     */
-    //% blockId=i2c_lcd_display block="display %text=text on LCD at column %col row %row"
+    //% blockId=lcd_initialize block="initialize LCD at address %addr"
+    //% addr.defl=39
+    export function initializeLCD(addr: number): void {
+        let i2cAddr = addr;
+
+        basic.pause(50);
+        sendCommand(i2cAddr, 0x33); // Initialize
+        sendCommand(i2cAddr, 0x32);
+        sendCommand(i2cAddr, 0x28);
+        sendCommand(i2cAddr, 0x0C);
+        sendCommand(i2cAddr, 0x06);
+        sendCommand(i2cAddr, 0x01); // Clear display
+        basic.pause(5);
+    }
+
+    function sendCommand(addr: number, cmd: number): void {
+        pins.i2cWriteNumber(addr, cmd, NumberFormat.UInt8LE, false);
+        basic.pause(5);
+    }
+
+
+
+    //% group="LCD Display"
+    //% blockId=lcd_print block="LCD print %text at column %col row %row"
     //% col.min=0 col.max=15 row.min=0 row.max=1
-    export function displayTextLCD(text: string | number | boolean, col: number, row: number): void {
-        let addr = 0x27; // Default I2C address for 16x2 LCD
-        let buf = pins.createBuffer(2);
-        buf[0] = 0x80 | (row == 0 ? 0x00 : 0x40) | col; // Set cursor position
-        pins.i2cWriteBuffer(addr, buf);
+    export function lcdPrint(text: string, col: number, row: number): void {
+        let addr = 39; // Change if needed
+        let pos = 0x80 + (row * 0x40) + col;
 
-        // Convert non-string values to string
-        let strText: string;
-        if (typeof text === "boolean") {
-            strText = text ? "true" : "false";
-        } else {
-            strText = "" + text; // Convert number to string
-        }
-
-        // Write text to LCD
-        for (let i = 0; i < strText.length; i++) {
-            buf[0] = strText.charCodeAt(i);
-            pins.i2cWriteBuffer(addr, buf);
+        sendCommand(addr, pos);
+        for (let i = 0; i < text.length; i++) {
+            sendCommand(addr, text.charCodeAt(i));
         }
     }
 
 
     //% group="LCD Display"
-//% blockId=lcd_initialize block="initialize LCD at address %addr"
-//% addr.defl=39
-export function initializeLCD(addr: number): void {
-    let i2cAddr = addr;
-    
-    basic.pause(50);
-    sendCommand(i2cAddr, 0x33); // Initialize
-    sendCommand(i2cAddr, 0x32);
-    sendCommand(i2cAddr, 0x28);
-    sendCommand(i2cAddr, 0x0C);
-    sendCommand(i2cAddr, 0x06);
-    sendCommand(i2cAddr, 0x01); // Clear display
-    basic.pause(5);
-}
-
-function sendCommand(addr: number, cmd: number): void {
-    pins.i2cWriteNumber(addr, cmd, NumberFormat.UInt8LE, false);
-    basic.pause(5);
-}
-
-
-
-    //% group="LCD Display"
-    /**
-     * Clears the I2C 16x2 LCD display.
-     */
-    //% blockId=i2c_lcd_clear block="clear LCD display"
-    export function clearLCD(): void {
-        let addr = 0x27; // Default I2C address for 16x2 LCD
-        let buf = pins.createBuffer(1);
-        buf[0] = 0x01; // Clear display command
-        pins.i2cWriteBuffer(addr, buf);
-        basic.pause(2); // Wait for LCD to clear
+    //% blockId=lcd_clear block="clear LCD"
+    export function lcdClear(): void {
+        let addr = 39; // Change if needed
+        sendCommand(addr, 0x01);
     }
-
-
-
-    //% group="LCD Display"
-    //% blockId=i2c_lcd_scroll block="scroll %text on LCD speed %speed ms | direction %direction=scr_direction"
-    //% speed.min=50 speed.max=500
-    export function scrollTextLCD(text: string, speed: number, direction: ScrollDirection): void {
-        let addr = 0x27; // Default I2C address for 16x2 LCD
-        let buf = pins.createBuffer(1);
-
-        // Display the initial text at position (0,0)
-        displayTextLCD(text, 0, 0);
-
-        // Scroll text left or right
-        for (let i = 0; i < 16; i++) {
-            buf[0] = (direction == ScrollDirection.Left) ? 0x18 : 0x1C; // LCD shift command
-            pins.i2cWriteBuffer(addr, buf);
-            basic.pause(speed);
-        }
-    }
-
-    //% blockId=scr_direction block="%direction"
-    //% blockHidden=true
-    export enum ScrollDirection {
-        //% block="Left"
-        Left = 0,
-        //% block="Right"
-        Right = 1
-    }
-
-
-    //% group="LCD Display"
-    //% blockId=i2c_lcd_backlight block="LCD backlight %state=backlight_state"
-    export function setLcdBacklight(state: BacklightState): void {
-        let addr = 0x27; // Default I2C address for 16x2 LCD
-        let backlightCmd = (state == BacklightState.On) ? 0x08 : 0x00; // 0x08 = ON, 0x00 = OFF
-
-        pins.i2cWriteNumber(addr, backlightCmd, NumberFormat.UInt8BE);
-    }
-
-    //% blockId=backlight_state block="%state"
-    //% blockHidden=true
-    export enum BacklightState {
-        //% block="ON"
-        On = 1,
-        //% block="OFF"
-        Off = 0
-    }
-
-
 
 
 
