@@ -11,31 +11,37 @@ namespace dCode {
 
     // CAR SECTION 🚗
     //% group="Car"
+    //% blockId=car_move block="Car Move %direction with speed %speed"
+    //% direction.shadow="dropdown" direction.defl="Forward"
+    //% speed.min=0 speed.max=1023
+    export function carMove(direction: string, speed: number): void {
+        let pwmSpeed = Math.map(speed, 0, 1023, 0, 255); // Scale speed for PWM
 
-    //% blockId=car_move block="move car %direction at speed %speed"
-    //% speed.min=0 speed.max=100
-    //% direction.defl=CarDirection.Forward
-    export function moveCar(direction: CarDirection, speed: number): void {
-        if (direction == CarDirection.Forward) {
-            pins.analogWritePin(DigitalPin.P12, speed * 10);
-            pins.analogWritePin(DigitalPin.P13, speed * 0);
-            pins.analogWritePin(DigitalPin.P14, speed * 10);
-            pins.analogWritePin(DigitalPin.P15, speed * 0);
-        } else {
-            pins.analogWritePin(DigitalPin.P12, 0);
-            pins.analogWritePin(DigitalPin.P13, 0);
-            pins.analogWritePin(DigitalPin.P14, 0);
-            pins.analogWritePin(DigitalPin.P15, 0);
-        }
-    }
-
-    //% blockId=car_steer block="steer car %direction"
-    //% direction.defl=Steering.Left
-    export function steerCar(direction: Steering): void {
-        if (direction == Steering.Left) {
-            pins.digitalWritePin(DigitalPin.P2, 1);
-        } else {
-            pins.digitalWritePin(DigitalPin.P2, 0);
+        if (direction == "Forward") {
+            pins.analogWritePin(AnalogPin.P12, pwmSpeed);
+            pins.analogWritePin(AnalogPin.P13, 0);
+            pins.analogWritePin(AnalogPin.P14, pwmSpeed);
+            pins.analogWritePin(AnalogPin.P15, 0);
+        } else if (direction == "Backward") {
+            pins.analogWritePin(AnalogPin.P12, 0);
+            pins.analogWritePin(AnalogPin.P13, pwmSpeed);
+            pins.analogWritePin(AnalogPin.P14, 0);
+            pins.analogWritePin(AnalogPin.P15, pwmSpeed);
+        } else if (direction == "Left") {
+            pins.analogWritePin(AnalogPin.P12, 0);
+            pins.analogWritePin(AnalogPin.P13, pwmSpeed);
+            pins.analogWritePin(AnalogPin.P14, pwmSpeed);
+            pins.analogWritePin(AnalogPin.P15, 0);
+        } else if (direction == "Right") {
+            pins.analogWritePin(AnalogPin.P12, pwmSpeed);
+            pins.analogWritePin(AnalogPin.P13, 0);
+            pins.analogWritePin(AnalogPin.P14, 0);
+            pins.analogWritePin(AnalogPin.P15, pwmSpeed);
+        } else if (direction == "Stop") {
+            pins.analogWritePin(AnalogPin.P12, 0);
+            pins.analogWritePin(AnalogPin.P13, 0);
+            pins.analogWritePin(AnalogPin.P14, 0);
+            pins.analogWritePin(AnalogPin.P15, 0);
         }
     }
 
