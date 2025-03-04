@@ -1,6 +1,14 @@
 //% color=#000000 icon="\uf2db" block="Bit-Z"
 namespace dCode {
 
+
+
+
+
+
+
+
+
     // CAR SECTION 🚗
     //% group="Car"
 
@@ -201,22 +209,26 @@ namespace dCode {
 
 
     //% group="LCD Display"
-    //% blockId=lcd_initialize block="initialize LCD display at address %addr"
-    //% addr.defl=39
-    export function initializeLCD(addr: number): void {
-        basic.pause(50);
-        let i2cAddr = addr;
+//% blockId=lcd_initialize block="initialize LCD at address %addr"
+//% addr.defl=39
+export function initializeLCD(addr: number): void {
+    let i2cAddr = addr;
+    
+    basic.pause(50);
+    sendCommand(i2cAddr, 0x33); // Initialize
+    sendCommand(i2cAddr, 0x32);
+    sendCommand(i2cAddr, 0x28);
+    sendCommand(i2cAddr, 0x0C);
+    sendCommand(i2cAddr, 0x06);
+    sendCommand(i2cAddr, 0x01); // Clear display
+    basic.pause(5);
+}
 
-        // Send initialization sequence
-        pins.i2cWriteNumber(i2cAddr, 0x33, NumberFormat.UInt8LE, false);
-        pins.i2cWriteNumber(i2cAddr, 0x32, NumberFormat.UInt8LE, false);
-        pins.i2cWriteNumber(i2cAddr, 0x28, NumberFormat.UInt8LE, false);
-        pins.i2cWriteNumber(i2cAddr, 0x0C, NumberFormat.UInt8LE, false);
-        pins.i2cWriteNumber(i2cAddr, 0x06, NumberFormat.UInt8LE, false);
-        pins.i2cWriteNumber(i2cAddr, 0x01, NumberFormat.UInt8LE, false);
+function sendCommand(addr: number, cmd: number): void {
+    pins.i2cWriteNumber(addr, cmd, NumberFormat.UInt8LE, false);
+    basic.pause(5);
+}
 
-        basic.pause(5);
-    }
 
 
     //% group="LCD Display"
