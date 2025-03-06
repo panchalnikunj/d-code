@@ -106,6 +106,7 @@ namespace dCode {
         }
     }
 
+
     //% block="Clear LCD"
     //% group="LCD Display"
     export function lcdClear(): void {
