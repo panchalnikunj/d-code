@@ -54,6 +54,8 @@ namespace dCode {
         //% block="Stop"
         Stop = 4
     }
+
+    
     let LCD_I2C_ADDR = 0x3F; // Default LCD I2C Address (Use 0x3F if needed)
 
     // Send command to LCD
