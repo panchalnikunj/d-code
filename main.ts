@@ -1,6 +1,35 @@
 //% color=#000000 icon="\uf2db" block="Bit-Z"
 namespace dCode {
+    // Function to control motors
+    function controlMotor(pin1: DigitalPin, pin2: DigitalPin, speed: number, direction: boolean) {
+        if (direction) { // Forward
+            pins.analogWritePin(pin1, speed);
+            pins.digitalWritePin(pin2, 0);
+        } else { // Backward
+            pins.analogWritePin(pin2, speed);
+            pins.digitalWritePin(pin1, 0);
+        }
+    }
 
+    //% block="Move car %dir with speed %speed"
+    //% speed.min=0 speed.max=255
+    //% dir.shadow="dropdown" dir.defl="Forward"
+    //% group="Car Control"
+    export function moveCar(dir: string, speed: number): void {
+        let forward = (dir == "Forward");
+
+        controlMotor(DigitalPin.P12, DigitalPin.P13, speed, forward);
+        controlMotor(DigitalPin.P14, DigitalPin.P15, speed, forward);
+    }
+
+    //% block="Stop car"
+    //% group="Car Control"
+    export function stopCar(): void {
+        pins.digitalWritePin(DigitalPin.P12, 0);
+        pins.digitalWritePin(DigitalPin.P13, 0);
+        pins.digitalWritePin(DigitalPin.P14, 0);
+        pins.digitalWritePin(DigitalPin.P15, 0);
+    }
 
     let LCD_I2C_ADDR = 0x3F; // Default LCD I2C Address (Use 0x3F if needed)
 
