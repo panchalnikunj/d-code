@@ -81,14 +81,18 @@ namespace dCode {
     export function lcdInit(addr: number): void {
         LCD_I2C_ADDR = addr;
         basic.pause(50);
-        lcdCommand(0x33); // Initialize
+
+        lcdCommand(0x33); // Initialize LCD in 4-bit mode
         lcdCommand(0x32);
-        lcdCommand(0x28);
-        lcdCommand(0x0C);
-        lcdCommand(0x06);
+        lcdCommand(0x28); // Function set: 2-line, 5x8 font
+        lcdCommand(0x0C); // Display ON, Cursor OFF
+        lcdCommand(0x06); // Entry mode set
         lcdCommand(0x01); // Clear display
         basic.pause(5);
+
+        lcdCommand(0x08); // Turn on backlight
     }
+
 
     //% block="Write %text on LCD at column %col row %row"
     //% col.min=0 col.max=15 row.min=0 row.max=1
@@ -224,7 +228,7 @@ namespace dCode {
     //% blockId=i2c_lcd_display block="display %text=text on LCD at column %col row %row"
     //% col.min=0 col.max=15 row.min=0 row.max=1
     export function displayTextLCD(text: string | number | boolean, col: number, row: number): void {
-        let addr = 0x07; // Default I2C address for 16x2 LCD
+        let addr = 0x27; // Default I2C address for 16x2 LCD
         let buf = pins.createBuffer(2);
         buf[0] = 0x80 | (row == 0 ? 0x00 : 0x40) | col; // Set cursor position
         pins.i2cWriteBuffer(addr, buf);
