@@ -7,7 +7,7 @@
 /**
  * Custom blocks
  */
-//% weight=20 color=#0fbc11 icon="U+1F916"
+//% weight=20 color=#0fbc11 icon="\U1F916"
 namespace I2C_LCD1602 {
     let i2cAddr: number // 0x3F: PCF8574A, 0x27: PCF8574
     let BK: number      // backlight control
