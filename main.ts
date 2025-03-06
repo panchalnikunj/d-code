@@ -57,7 +57,7 @@ namespace dCode {
 
     
     let LCD_I2C_ADDR = 0x3F; // Default LCD I2C Address (Use 0x3F if needed)
-
+    
     // Send command to LCD
     function lcdCommand(cmd: number) {
         let buf = pins.createBuffer(2);
@@ -224,7 +224,7 @@ namespace dCode {
     //% blockId=i2c_lcd_display block="display %text=text on LCD at column %col row %row"
     //% col.min=0 col.max=15 row.min=0 row.max=1
     export function displayTextLCD(text: string | number | boolean, col: number, row: number): void {
-        let addr = 0x3F; // Default I2C address for 16x2 LCD
+        let addr = 0x07; // Default I2C address for 16x2 LCD
         let buf = pins.createBuffer(2);
         buf[0] = 0x80 | (row == 0 ? 0x00 : 0x40) | col; // Set cursor position
         pins.i2cWriteBuffer(addr, buf);
