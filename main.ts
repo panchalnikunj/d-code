@@ -1,36 +1,59 @@
 //% color=#000000 icon="\uf2db" block="Bit-Z"
 namespace dCode {
-    // Function to control motors
-    function controlMotor(pin1: DigitalPin, pin2: DigitalPin, speed: number, direction: boolean) {
-        if (direction) { // Forward
-            pins.analogWritePin(pin1, speed);
-            pins.digitalWritePin(pin2, 0);
-        } else { // Backward
-            pins.analogWritePin(pin2, speed);
-            pins.digitalWritePin(pin1, 0);
+    //% group="Car Control"
+    //% blockId=car_control block="Move car %direction speed %speed"
+    //% speed.min=0 speed.max=100
+    export function carMove(direction: CarDirection, speed: number): void {
+        let pwmValue = Math.map(speed, 0, 100, 0, 1023);
+
+        switch (direction) {
+            case CarDirection.Forward:
+                pins.analogWritePin(AnalogPin.P12, pwmValue);
+                pins.analogWritePin(AnalogPin.P13, 0);
+                pins.analogWritePin(AnalogPin.P14, pwmValue);
+                pins.analogWritePin(AnalogPin.P15, 0);
+                break;
+            case CarDirection.Backward:
+                pins.analogWritePin(AnalogPin.P12, 0);
+                pins.analogWritePin(AnalogPin.P13, pwmValue);
+                pins.analogWritePin(AnalogPin.P14, 0);
+                pins.analogWritePin(AnalogPin.P15, pwmValue);
+                break;
+            case CarDirection.Left:
+                pins.analogWritePin(AnalogPin.P12, 0);
+                pins.analogWritePin(AnalogPin.P13, pwmValue);
+                pins.analogWritePin(AnalogPin.P14, pwmValue);
+                pins.analogWritePin(AnalogPin.P15, 0);
+                break;
+            case CarDirection.Right:
+                pins.analogWritePin(AnalogPin.P12, pwmValue);
+                pins.analogWritePin(AnalogPin.P13, 0);
+                pins.analogWritePin(AnalogPin.P14, 0);
+                pins.analogWritePin(AnalogPin.P15, pwmValue);
+                break;
+            case CarDirection.Stop:
+                pins.analogWritePin(AnalogPin.P12, 0);
+                pins.analogWritePin(AnalogPin.P13, 0);
+                pins.analogWritePin(AnalogPin.P14, 0);
+                pins.analogWritePin(AnalogPin.P15, 0);
+                break;
         }
     }
 
-    //% block="Move car %dir with speed %speed"
-    //% speed.min=0 speed.max=255
-    //% dir.shadow="dropdown" dir.defl="Forward"
-    //% group="Car Control"
-    export function moveCar(dir: string, speed: number): void {
-        let forward = (dir == "Forward");
-
-        controlMotor(DigitalPin.P12, DigitalPin.P13, speed, forward);
-        controlMotor(DigitalPin.P14, DigitalPin.P15, speed, forward);
+    //% blockId=car_direction block="%direction"
+    //% blockHidden=true
+    export enum CarDirection {
+        //% block="Forward"
+        Forward = 0,
+        //% block="Backward"
+        Backward = 1,
+        //% block="Left"
+        Left = 2,
+        //% block="Right"
+        Right = 3,
+        //% block="Stop"
+        Stop = 4
     }
-
-    //% block="Stop car"
-    //% group="Car Control"
-    export function stopCar(): void {
-        pins.digitalWritePin(DigitalPin.P12, 0);
-        pins.digitalWritePin(DigitalPin.P13, 0);
-        pins.digitalWritePin(DigitalPin.P14, 0);
-        pins.digitalWritePin(DigitalPin.P15, 0);
-    }
-
     let LCD_I2C_ADDR = 0x3F; // Default LCD I2C Address (Use 0x3F if needed)
 
     // Send command to LCD
